@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package package_name;
+
+option go_package = ".;protobuf"; 
+
+import "google/api/annotations.proto";
+
+service User {
+    // register rpc's
+    rpc GetUser (GetUserRequest) returns (UserResponse) {
+        option (google.api.http) = {
+          get: "/api/user/{id}"
+        };
+    }
+
+    rpc CreateUser (CreateUserRequest) returns (UserResponse) {
+        option (google.api.http) = {
+          post: "/api/user"
+          body: "*"
+        };
+    }
+}
+
+// default user information model
+message UserModel {
+    int64 id = 1;
+    string email = 2;
+    string username = 3;
+    string displayname = 4;
+}
+
+message ResponseModel {
+    string Error = 1;
+    string Status = 2;
+    string Code = 3;
+}
+
+message GetUserRequest {
+    int64 id = 1;
+}
+
+message CreateUserRequest {
+    string email = 1;
+    string username = 2;
+    string displayname = 3;
+    string password = 4;
+}
+
+message UserResponse {
+    ResponseModel response = 1;
+    UserModel user = 2;
+}

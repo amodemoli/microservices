@@ -1,0 +1,8 @@
+{
+    // add yours...
+    "services": {
+        // services host http address
+        "user": "fake:5051",
+        "auth": "http://fake:5050"
+    }
+}

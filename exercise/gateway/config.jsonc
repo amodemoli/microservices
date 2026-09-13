@@ -1,0 +1,13 @@
+{
+    // add yours...
+    "services": {
+        // services host http address
+        "user": "http://localhost:8081",
+        "auth": "http://localhost:8082",
+        "admin": "http://localhost:8083",
+        "notification": "http://localhost:8084"
+    },
+
+    // pinger helper function named "Ping" timeout in seconds.
+    "pinging_timeout": 5
+}
