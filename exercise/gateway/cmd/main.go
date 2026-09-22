@@ -13,6 +13,7 @@ import (
 	"github.com/amodemoli/microservices/exercise/gateway/internal/helpers"
 	"github.com/amodemoli/microservices/exercise/gateway/internal/helpers/codes/response"
 	"github.com/amodemoli/microservices/exercise/gateway/internal/helpers/codes/status"
+	"github.com/amodemoli/microservices/exercise/gateway/internal/middleware"
 	"github.com/valyala/fasthttp"
 )
 
@@ -38,9 +39,11 @@ func main() {
 			Status:  status.Ready,
 			Message: "proxy is ready to use",
 			Code:    response.Healthly,
-			Data:    helpers.ServicePinger(cnf, httpClient),
+			Data:    helpers.ServicePinger(app, cnf, httpClient),
 		})
-	})
+	}, middleware.Limiter(cnf, 1*time.Minute, 2, middleware.LimiterCustomResp{
+		Message: "to many requests, two requests per minute",
+	}))
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel() // cancel after ending server
@@ -83,4 +86,5 @@ func configLoader(app *fastic.App) *config.Config {
 // 6) add logger (with log file)
 // 7) add auto-backuper for logging files
 // 8) create auth middlewares and limiter...
-// 9) create custom middleware for limit requests for see ping of services (1 request per minute)
+// 9) create custom middleware for limit requests for see ping of services (10 request per minute)
+// 10) adding alert function for send notification to admin/user (send email or system notification) for send emergency error's to user (after adding check ping.go:43)
