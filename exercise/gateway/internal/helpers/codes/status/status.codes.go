@@ -18,18 +18,19 @@ const (
 
 // Additional statuses for more granular control
 const (
-	Created   Status = "Created"   // Resource was created successfully
-	Updated   Status = "Updated"   // Resource was updated successfully
-	Deleted   Status = "Deleted"   // Resource was deleted successfully
-	Accepted  Status = "Accepted"  // Request accepted but processing is deferred
-	Canceled  Status = "Canceled"  // Operation was canceled
-	Timeout   Status = "Timeout"   // Operation timed out
-	Aborted   Status = "Aborted"   // Operation was aborted
-	Invalid   Status = "Invalid"   // Request or data is invalid
-	NotFound  Status = "NotFound"  // Requested resource was not found
-	Duplicate Status = "Duplicate" // Duplicate entry or conflict
-	Forbidden Status = "Forbidden" // Access forbidden
+	Created      Status = "Created"      // Resource was created successfully
+	Updated      Status = "Updated"      // Resource was updated successfully
+	Deleted      Status = "Deleted"      // Resource was deleted successfully
+	Accepted     Status = "Accepted"     // Request accepted but processing is deferred
+	Canceled     Status = "Canceled"     // Operation was canceled
+	Timeout      Status = "Timeout"      // Operation timed out
+	Aborted      Status = "Aborted"      // Operation was aborted
+	Invalid      Status = "Invalid"      // Request or data is invalid
+	NotFound     Status = "NotFound"     // Requested resource was not found
+	Duplicate    Status = "Duplicate"    // Duplicate entry or conflict
+	Forbidden    Status = "Forbidden"    // Access forbidden
 	Unauthorized Status = "Unauthorized" // Authentication required or failed
+	RateLimited  Status = "RateLimited"  // RateLimited for user
 )
 
 // 🐋 This file was generated with the assistance of DeepSeek (DeepSeek AI model)
