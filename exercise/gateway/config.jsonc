@@ -18,6 +18,19 @@
     // general proxy settings
     "general": {
          // pinger helper function named "Ping" timeout in seconds.
-        "pinging_timeout": "5s"
+        "pinging_timeout": "5s",
+        "loging_file": "../../logs/gateway.log",
+
+        // auto flushing log file, only accept's boolian
+        "auto_flush": true,
+
+        // logger auto flush ticker interval's
+
+        // on development mode
+        // cannot smaller than 1 second
+        "development_logger_flush_ticker": "1s",
+        // on production mode
+        // cannot smaller than 10 second
+        "production_logger_flush_ticker": "25s" 
     }
 }
