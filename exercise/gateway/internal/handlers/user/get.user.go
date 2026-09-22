@@ -9,10 +9,11 @@ import (
 	"github.com/amodemoli/microservices/exercise/gateway/internal/helpers"
 	"github.com/amodemoli/microservices/exercise/gateway/internal/helpers/codes/response"
 	"github.com/amodemoli/microservices/exercise/gateway/internal/helpers/codes/status"
+	"github.com/amodemoli/microservices/exercise/gateway/internal/helpers/logger"
 	pbUserService "github.com/amodemoli/microservices/exercise/user/protobuf"
 )
 
-func GetUser(app *fastic.App, c *fastic.Ctx, client *pbUserService.UserHTTPGoClient) {
+func GetUser(app *fastic.App, c *fastic.Ctx, lg *logger.Logger, client *pbUserService.UserHTTPGoClient) {
 
 	id, err := strconv.ParseInt(fmt.Sprint(c.UserValue("id")), 10, 64)
 	if err != nil {
@@ -28,7 +29,7 @@ func GetUser(app *fastic.App, c *fastic.Ctx, client *pbUserService.UserHTTPGoCli
 	resp, err := client.GetUser(c.RequestCtx, &pbUserService.GetUserRequest{Id: id})
 	if err != nil {
 		// error from grpc
-		handlers.HandleServerErrors(app, c, err)
+		handlers.HandleServerErrors(app, lg, c, "user", err)
 		return
 	}
 

@@ -1,16 +1,17 @@
 package handlers
 
 import (
+	"fmt"
 	"strings"
 
-	"github.com/amodemoli/fastic/core/color"
 	"github.com/amodemoli/fastic/core/fastic"
 	"github.com/amodemoli/microservices/exercise/gateway/internal/helpers"
 	"github.com/amodemoli/microservices/exercise/gateway/internal/helpers/codes/response"
 	"github.com/amodemoli/microservices/exercise/gateway/internal/helpers/codes/status"
+	"github.com/amodemoli/microservices/exercise/gateway/internal/helpers/logger"
 )
 
-func HandleServerErrors(app *fastic.App, c *fastic.Ctx, err error) {
+func HandleServerErrors(app *fastic.App, lg *logger.Logger, c *fastic.Ctx, service string, err error) {
 	if errIsTimeout(err) {
 		c.Status(504)
 		helpers.Json(c, helpers.Options{
@@ -27,7 +28,7 @@ func HandleServerErrors(app *fastic.App, c *fastic.Ctx, err error) {
 		Message: "unknown error, check terminal for see more...",
 		Code:    response.InternalServerError,
 	})
-	helpers.Print(app, color.Red, "USER-SERVICE-ERROR", err.Error())
+	lg.Error(fmt.Sprintf("%s service error: %v [handlers/server.errors.go]", service, err))
 
 }
 

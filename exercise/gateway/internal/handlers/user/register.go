@@ -6,9 +6,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/amodemoli/fastic/core/color"
 	"github.com/amodemoli/fastic/core/fastic"
-	"github.com/amodemoli/microservices/exercise/gateway/internal/helpers"
+	"github.com/amodemoli/microservices/exercise/gateway/internal/helpers/logger"
 	pbUserService "github.com/amodemoli/microservices/exercise/user/protobuf"
 	"github.com/valyala/fasthttp"
 )
@@ -28,6 +27,8 @@ type Client struct {
 func Register(
 	// application struct, for print errors on terminal
 	app *fastic.App,
+	// logger struct, for send texts on log message
+	lg *logger.Logger,
 	// context (can be with timeout)
 	ctx context.Context,
 	// user-service target host url
@@ -44,8 +45,7 @@ func Register(
 		// check server development mode status
 		// for security, im check if development_mode is off i ignore this error else: exit from application with 1 error code.!
 		if app.Env.DevelopemtMode {
-			// development mode is true, only write erorr on terminal
-			helpers.Print(app, color.Yellow, "WARNING", message)
+			lg.Warn(message)
 			return errors.New(message) // return because other section dont works now
 		}
 		// development mode is false, server on production mode.! exit from server and show error
@@ -56,7 +56,8 @@ func Register(
 	// get user client from protobuf of user service
 	userClient, err := pbUserService.GetUserHTTPGoClient(ctx, fasthttpClient, target, nil)
 	if err != nil {
-		helpers.Print(app, color.Red, "CONN-ERROR", fmt.Sprintf("user-service connection failed: %v", err))
+		lg.Error(fmt.Sprintf("user-service connection failed: %v", err))
+
 		// return from register function (dont need to connect.)
 		// i used return because other next step's of code don't works. exiting now without registering
 		return err
@@ -65,7 +66,7 @@ func Register(
 	// connection is succsess with no errors, register user paths.
 
 	app.Get("/api/user/{id}", func(c *fastic.Ctx) {
-		GetUser(app, c, userClient)
+		GetUser(app, c, lg, userClient)
 	})
 
 	// return from function after registering all paths
