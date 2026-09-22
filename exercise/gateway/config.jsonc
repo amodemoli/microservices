@@ -8,6 +8,16 @@
         "notification": "http://localhost:8084"
     },
 
-    // pinger helper function named "Ping" timeout in seconds.
-    "pinging_timeout": 5
+    // proxy middlewares settings
+    "middlewares": {
+        // limiter cleanup ticker time in minutes,
+        // e.g: 1 mean's limiter cleans limit requests in 1 minute
+        "limiter_cleanup_ticker": 1
+    },
+
+    // general proxy settings
+    "general": {
+         // pinger helper function named "Ping" timeout in seconds.
+        "pinging_timeout": "5s"
+    }
 }
