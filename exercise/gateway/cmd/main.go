@@ -13,6 +13,7 @@ import (
 	"github.com/amodemoli/microservices/exercise/gateway/internal/helpers"
 	"github.com/amodemoli/microservices/exercise/gateway/internal/helpers/codes/response"
 	"github.com/amodemoli/microservices/exercise/gateway/internal/helpers/codes/status"
+	"github.com/amodemoli/microservices/exercise/gateway/internal/helpers/logger"
 	"github.com/amodemoli/microservices/exercise/gateway/internal/middleware"
 	"github.com/valyala/fasthttp"
 )
@@ -32,6 +33,8 @@ func main() {
 	// load config file with configLoader helper
 	cnf := configLoader(app)
 
+	lg := logger.New(app, cnf)
+
 	// path for get proxy and other services status
 	// response json with restful-api
 	app.Get("/health", func(c *fastic.Ctx) {
@@ -41,6 +44,7 @@ func main() {
 			Code:    response.Healthly,
 			Data:    helpers.ServicePinger(app, cnf, httpClient),
 		})
+
 	}, middleware.Limiter(cnf, 1*time.Minute, 2, middleware.LimiterCustomResp{
 		Message: "to many requests, two requests per minute",
 	}))
@@ -50,7 +54,7 @@ func main() {
 
 	// create user-service client and register all paths of user-service,
 	// with error handeling and print erorrs on log/terminal (dont need handle error here.)
-	user.Register(app, ctx, cnf.Services["user"], httpClient, nil) // used nil for middlewares, because i dont need add some middlewares now.
+	user.Register(app, lg, ctx, cnf.Services["user"], httpClient, nil) // used nil for middlewares, because i dont need add some middlewares now.
 
 	// run proxy
 	app.Run(app.Handler)
@@ -70,6 +74,7 @@ func configLoader(app *fastic.App) *config.Config {
 		}
 		// write log on console
 		helpers.Print(app, color.Red, "CNF-ERROR", fmt.Sprintf("cannot load config file: %v", err))
+
 		// return empty config variable.
 		return cnf
 	}
@@ -88,3 +93,4 @@ func configLoader(app *fastic.App) *config.Config {
 // 8) create auth middlewares and limiter...
 // 9) create custom middleware for limit requests for see ping of services (10 request per minute)
 // 10) adding alert function for send notification to admin/user (send email or system notification) for send emergency error's to user (after adding check ping.go:43)
+// 11) adding test's for logger
