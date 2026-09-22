@@ -18,7 +18,7 @@ func Ping(app *fastic.App, cnf *config.Config, client *fasthttp.Client, target s
 	// get final timeout from finalTimeout helper,
 	// this function have default value for timeout, first get's timeout from customTimeout
 	// and if customTimeout is empty or cannot validate it try's to get new timeout from config
-	timeout := finalTimeout(app, cnf, customTimeout[0])
+	timeout := finalTimeout(cnf, customTimeout[0])
 
 	// get request and response from fasthttp
 	req, resp := fasthttp.AcquireRequest(), fasthttp.AcquireResponse()
@@ -68,7 +68,7 @@ func validateTimeout(d time.Duration) bool {
 
 // finalTimeout get's app && config model and customTimeout, and return's finally timeout Duration
 // only maded for use on Ping
-func finalTimeout(app *fastic.App, cnf *config.Config, customTimeout time.Duration) time.Duration {
+func finalTimeout(cnf *config.Config, customTimeout time.Duration) time.Duration {
 	// make variable named timeout and save default value to 10 second
 	var timeout time.Duration = 10 * time.Second
 
@@ -77,7 +77,7 @@ func finalTimeout(app *fastic.App, cnf *config.Config, customTimeout time.Durati
 		timeout = customTimeout
 	} else {
 		// get timeout from config file and change it to time.Duration.
-		cnfTimeout, err := toDuration(cnf.General["pinging_timeout"])
+		cnfTimeout, err := ToDuration(cnf.General["pinging_timeout"])
 		// if error is empty, replace it
 		if err == nil {
 			if validateTimeout(cnfTimeout) {
@@ -89,26 +89,6 @@ func finalTimeout(app *fastic.App, cnf *config.Config, customTimeout time.Durati
 
 	// return finally timeout
 	return timeout
-}
-
-// anyToTime converts any type to time.Duration type
-// if cannot convert result is 0
-func toDuration(v any) (time.Duration, error) {
-
-	switch val := v.(type) {
-	case time.Duration:
-		return val, nil
-	case float64: // JSON numbers come as float64
-		return time.Duration(val * float64(time.Second)), nil
-	case int:
-		return time.Duration(val) * time.Second, nil
-	case int64:
-		return time.Duration(val) * time.Second, nil
-	case string:
-		return time.ParseDuration(val)
-	default:
-		return 0, fmt.Errorf("cannot convert %T to time.Duration", v)
-	}
 }
 
 // ServicePinger helper, ping's all registered services with Ping helper function's help
