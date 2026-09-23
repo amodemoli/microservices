@@ -12,6 +12,8 @@ import (
 )
 
 func HandleServerErrors(app *fastic.App, lg *logger.Logger, c *fastic.Ctx, service string, err error) {
+	prefix := "service-errors"
+
 	if errIsTimeout(err) {
 		c.Status(504)
 		helpers.Json(c, helpers.Options{
@@ -28,7 +30,7 @@ func HandleServerErrors(app *fastic.App, lg *logger.Logger, c *fastic.Ctx, servi
 		Message: "unknown error, check terminal for see more...",
 		Code:    response.InternalServerError,
 	})
-	lg.Error(fmt.Sprintf("%s service error: %v [handlers/server.errors.go]", service, err))
+	lg.Error(prefix, fmt.Sprintf("%s service error: %v [handlers/server.errors.go]", service, err))
 
 }
 

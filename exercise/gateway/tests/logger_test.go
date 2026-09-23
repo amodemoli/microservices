@@ -45,6 +45,8 @@ func TestLogger(t *testing.T) {
 
 func testingLogger(app *fastic.App, cnf *config.Config, path string, step int) error {
 
+	prefix := "logger-test"
+
 	if err := os.Remove(path); err != nil {
 		return fmt.Errorf("cannot remove: %v", err)
 	}
@@ -53,7 +55,7 @@ func testingLogger(app *fastic.App, cnf *config.Config, path string, step int) e
 
 	switch step {
 	case 1:
-		lg.Info("testing with flush")
+		lg.Info(prefix, "testing with flush")
 		// flush now
 		lg.Flush()
 
@@ -67,7 +69,7 @@ func testingLogger(app *fastic.App, cnf *config.Config, path string, step int) e
 		}
 
 	case 2:
-		lg.Info("testing without flush")
+		lg.Info(prefix, "testing without flush")
 		// testing autoflush (dont flush with lg.Flush)
 
 		// sleeped 3 seconds (auto-flush delay is two seconds but im sleeping for three seconds)

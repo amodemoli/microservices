@@ -38,6 +38,8 @@ func Register(
 	// middlewares, can be empty use <nil>
 	middlewares []func(ctx context.Context, req *fasthttp.Request, handler func(ctx context.Context, req *fasthttp.Request) (resp *fasthttp.Response, err error)) (resp *fasthttp.Response, err error)) error {
 
+	prefix := "register-service"
+
 	// validate target service url length
 	if target == "" {
 		// create error message for use
@@ -45,7 +47,7 @@ func Register(
 		// check server development mode status
 		// for security, im check if development_mode is off i ignore this error else: exit from application with 1 error code.!
 		if app.Env.DevelopemtMode {
-			lg.Warn(message)
+			lg.Warn(prefix, message)
 			return errors.New(message) // return because other section dont works now
 		}
 		// development mode is false, server on production mode.! exit from server and show error
@@ -56,7 +58,7 @@ func Register(
 	// get user client from protobuf of user service
 	userClient, err := pbUserService.GetUserHTTPGoClient(ctx, fasthttpClient, target, nil)
 	if err != nil {
-		lg.Error(fmt.Sprintf("user-service connection failed: %v", err))
+		lg.Error(prefix, fmt.Sprintf("user-service connection failed: %v", err))
 
 		// return from register function (dont need to connect.)
 		// i used return because other next step's of code don't works. exiting now without registering
