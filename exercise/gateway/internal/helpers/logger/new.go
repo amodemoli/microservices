@@ -24,6 +24,7 @@ type Logger struct {
 	stopCh       chan struct{}
 	wg           sync.WaitGroup
 	canAutoFlush bool
+	canBackup    bool
 }
 
 func New(app *fastic.App, cnf *config.Config, customPath ...string) *Logger {
@@ -47,6 +48,11 @@ func New(app *fastic.App, cnf *config.Config, customPath ...string) *Logger {
 		autoFlush = true
 	}
 
+	backup, ok := cnf.General["enable_loging_backup"].(bool)
+	if !ok {
+		backup = true
+	}
+
 	lg := &Logger{
 		writer:       writer,
 		logger:       logger,
@@ -56,11 +62,16 @@ func New(app *fastic.App, cnf *config.Config, customPath ...string) *Logger {
 		stopCh:       make(chan struct{}),
 		mu:           sync.Mutex{},
 		canAutoFlush: autoFlush,
+		canBackup:    backup,
 	}
 
 	if lg.canAutoFlush {
 		lg.wg.Add(1)
 		go lg.autoFlush()
+	}
+
+	if lg.canBackup {
+		lg.startBackup()
 	}
 
 	return lg
