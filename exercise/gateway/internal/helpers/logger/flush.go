@@ -69,10 +69,17 @@ func (l *Logger) getInterval(d ...time.Duration) time.Duration {
 	var interval time.Duration
 	var anyCnfInternal any
 
+	var devMode bool
+
+	// used this for recover from panics
+	if l.app.Env != nil {
+		devMode = l.app.Env.DevelopemtMode
+	}
+
 	// defferent default values for ticker duration default value,
 	// because on development mode developer need to see errors on log very speed. but on production mode developer dont need to speed flush,
 	// they need to have +10 second time for flush ticker for performance.
-	if l.app.Env.DevelopemtMode {
+	if devMode {
 		interval = 1 * time.Second
 		anyCnfInternal = l.cnf.General["development_logger_flush_ticker"]
 	} else {
