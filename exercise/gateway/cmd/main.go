@@ -88,9 +88,9 @@ func configLoader(app *fastic.App) *config.Config {
 // 3) fix config file problem (with config file value i cannot connect to user service) [DONE]
 // 4) define user service (at line 55) and other services in custom function and... [DONE]
 // 5) if target service is offline show custom message for this [DONE]
-// 6) add logger (with log file)
-// 7) add auto-backuper for logging files
-// 8) create auth middlewares and limiter...
-// 9) create custom middleware for limit requests for see ping of services (10 request per minute)
+// 6) add logger (with log file) [DONE]
+// 7) add auto-backuper for logging files [DONE]
+// 8) create auth middlewares
+// 9) create custom middleware for limit requests for see ping of services (10 request per minute) [DONE]
 // 10) adding alert function for send notification to admin/user (send email or system notification) for send emergency error's to user (after adding check ping.go:43)
-// 11) adding test's for logger
+// 11) adding test's for logger [DONE]
