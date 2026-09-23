@@ -17,20 +17,37 @@
 
     // general proxy settings
     "general": {
+
          // pinger helper function named "Ping" timeout in seconds.
+         // cannot lower than 2 seconds and bigger than 100 seconds 
         "pinging_timeout": "5s",
+
+        // # - - - - - - Log Settings - - - - - - # 
+
         "loging_file": "../../logs/gateway.log",
 
-        // auto flushing log file, only accept's boolian
+        // automatic flushing your contents to log file 
+        // this logging system using flush system for performance.
+        // if you turned off this, you can use lg.Flush() after any use to write your content to log file
         "auto_flush": true,
-
-        // logger auto flush ticker interval's
 
         // on development mode
         // cannot smaller than 1 second
         "development_logger_flush_ticker": "1s",
         // on production mode
         // cannot smaller than 10 second
-        "production_logger_flush_ticker": "25s" 
+        "production_logger_flush_ticker": "25s",
+    
+        // ∎ Log Backup Settings
+        "enable_loging_backup": true,
+
+        "loging_backup_dir": "../../logs/backups/",
+        
+        // cannot lower than 1 second
+        "auto_check_backup": "60s",
+
+        // per byte
+        // cannot lower than 5000 (5kb)
+        "maximum_log_size": 1000000
     }
 }
